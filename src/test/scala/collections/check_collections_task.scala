@@ -1,6 +1,6 @@
 package collections
 
-import collections.task_collections._
+import collections.task_collections.{Auto, capitalizeIgnoringASCII, filterAllLeftDealerAutoWithoutRight, intersectionAuto, numbersToNumericString}
 import org.scalatest.flatspec.AnyFlatSpec
 
 class check_collections_task extends AnyFlatSpec {
