@@ -1,5 +1,6 @@
 import module1.threads.{Thread1, ToyFuture, getRatesLocation1, getRatesLocation2, getRatesLocation3, getRatesLocation4, getRatesLocation5, getRatesLocation6, printRunningTime}
 import module1.{functions, future, promise, type_system}
+import module2.implicits.{implicit_conversions, implicit_scopes}
 
 import scala.util.Try
 
@@ -48,14 +49,18 @@ object Main{
 //      println(_)
 //    }
 
-    println(promise.p1.isCompleted)
-    println(promise.f1.isCompleted)
-    promise.p1.complete(Try(10))
-    println(promise.p1.isCompleted)
-    println(promise.f1.isCompleted)
-    promise.f1.foreach(println(_))
+//    println(promise.p1.isCompleted)
+//    println(promise.f1.isCompleted)
+//    promise.p1.complete(Try(10))
+//    println(promise.p1.isCompleted)
+//    println(promise.f1.isCompleted)
+//    promise.f1.foreach(println(_))
+//
+//    Thread.sleep(4000)
 
-    Thread.sleep(4000)
+
+    //implicit_conversions.res
+    implicit_scopes.result
     println(s"Hello, from ${Thread.currentThread().getName}")
   }
 
