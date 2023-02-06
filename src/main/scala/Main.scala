@@ -66,9 +66,12 @@ object Main{
     // implicit_scopes.result
   //  println(s"Hello, from ${Thread.currentThread().getName}")
 
-    val r: executableEncoding.Console[Unit] = executableEncoding.p3
-    val r2: declarativeEncoding.Console[Unit] = declarativeEncoding.p2
-    declarativeEncoding.interpret(r2)
+//    val r: executableEncoding.Console[Unit] = executableEncoding.p3
+//    val r2: declarativeEncoding.Console[Unit] = declarativeEncoding.p2
+//    declarativeEncoding.interpret(r2)
+
+
+
   }
 
 }
