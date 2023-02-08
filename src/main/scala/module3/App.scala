@@ -1,11 +1,11 @@
 package module3
 
-import zio.{ExitCode, URIO}
+import zio.{ExitCode, URIO, ZIO}
 
 object App {
   def main(args: Array[String]): Unit = {
 
-    zio.Runtime.default.unsafeRun(multipleErrors.app)
+    zio.Runtime.default.unsafeRun(zioConcurrency.printEffectRunningTime(zioConcurrency.p3))
 
    // toyModel.echo.run()
 
