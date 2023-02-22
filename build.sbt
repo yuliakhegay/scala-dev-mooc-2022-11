@@ -80,3 +80,4 @@ libraryDependencies ++= Dependencies.zioConfig
 // To learn more about multi-project builds, head over to the official sbt
 // documentation at http://www.scala-sbt.org/documentation.html
 scalacOptions += "-Ymacro-annotations"
+testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework"))
