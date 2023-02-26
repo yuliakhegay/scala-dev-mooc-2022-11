@@ -260,7 +260,10 @@ object hof{
      * Реализовать метод filter, который будет возвращать не пустой Option
      * в случае если исходный не пуст и предикат от значения = true
      */
-
+    def filter(f: T => Boolean): Option[T] = this match {
+      case Option.Some(v) => if (f(v)) this else Option.None
+      case Option.None => Option.None
+    }
 
   }
 
@@ -312,11 +315,11 @@ object hof{
      }
 
 
-     def flatMap[B](f: T => List[B]): List[B] = this match {
-       case List.::(head, tail) => ???
-       case List.Nil => List.Nil
-       case _ => ???
-     }
+//     def flatMap[B](f: T => List[B]): List[B] = this match {
+//       case List.::(head, tail) => ???
+//       case List.Nil => List.Nil
+//       case _ => ???
+//     }
 
 
      /**
@@ -334,7 +337,15 @@ object hof{
       *
       * Реализовать метод reverse который позволит заменить порядок элементов в списке на противоположный
       */
-     def reverse: List[T] = ???
+     def reverse: List[T] = {
+       @tailrec
+       def loop(inputList: List[T], outputList: List[T] = List.Nil): List[T] =
+         inputList match {
+           case List.Nil => outputList
+           case List.::(head, tail) => loop(tail, head :: outputList)
+         }
+       loop(this)
+     }
 
 
      /**
@@ -342,11 +353,13 @@ object hof{
       * Реализовать метод filter для списка который будет фильтровать список по некому условию
       */
      def filter(f: T => Boolean): List[T] = {
+       @tailrec
        def loop(inputList: List[T], outputList: List[T] = List.Nil): List[T] =
          inputList match {
+           case List.::(head, tail) if f(head) => loop(tail, head :: outputList)
            case List.Nil => outputList
-           case List.::(head, tail) => loop(tail, f(head) :: outputList)
-       }
+           case _ => outputList
+         }
        loop(this).reverse
      }
 
@@ -356,7 +369,14 @@ object hof{
       * Написать функцию incList котрая будет принимать список Int и возвращать список,
       * где каждый элемент будет увеличен на 1
       */
-     def incList: List[Int] = this.map(num => num + 1)
+     def incList(inc: Int): List[T] = {
+       def loop(inputList: List[T], outputList: List[T] = List.Nil) =
+         inputList match {
+           case List.::(head, tail) => loop(tail, (head + inc) :: outputList)
+           case List.Nil => outputList
+         }
+       loop(this).reverse
+     }
 
 
      /**
@@ -364,23 +384,23 @@ object hof{
       * Написать функцию shoutString котрая будет принимать список String и возвращать список,
       * где к каждому элементу будет добавлен префикс в виде '!'
       */
-     def shoutString: List[String] = this.map("!" + _)
+     def shoutString(prefix: String): List[T] = {
+       def loop(inputList: List[T], outputList: List[T] = List.Nil): List[T] =
+         inputList match {
+           case List.::(head, tail) => loop(tail, (prefix + head) :: outputList)
+           case List.Nil => outputList
+         }
+     }
 
 
-//     Нужен ли здесь паттерн матчинг? Кажется нет
      def shoutString2: List[String] = this match {
        case List.::(head, tail) =>
          val shoutHead = "!" + head
          val shoutTail = tail.map("!" + _)
          shoutHead :: shoutTail
        case List.Nil => List.Nil
-       case _ => ???
      }
    }
-
-   def incList(lst: List[Int]): List[Int] = lst.map(_ + 1)
-
-   def shoutString(lst: List[String]): List[String] = lst.map("!" + _)
 
 
    object List {
@@ -401,6 +421,6 @@ object hof{
    val l1 = List(1, 2, 3)
    val l2 = List("one", "two", "three")
    l1.mkString("!") // 1!2!3
-   l2.mkString(":") //one:two:three
+   l2.mkString(":") // one:two:three
 
  }
