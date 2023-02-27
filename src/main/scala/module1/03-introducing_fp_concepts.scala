@@ -298,28 +298,23 @@ object hof{
       * Метод cons, добавляет элемент в голову списка, для этого метода можно воспользоваться названием `::`
       *
       */
-     def ::[TT >: T](elem: TT): List[TT] = ???
+     def ::[TT >: T](elem: TT): List[TT] =
+       List.::(elem, this)
 
 
      /**
       *
       * Реализовать метод map для списка который будет применять некую ф-цию к элементам данного списка
       */
-     def map[B](f: T => B): List[B] = this match {
-       case List.::(head, tail) =>
-         val newHead = f(head)
-         val newTail = for (elem <- tail) yield f(elem)
-         newHead :: newTail
-       case List.Nil => List.Nil
-       case _ => ???
+     def map[B](f: T => B): List[B] = {
+       @tailrec
+       def loop(inputList: List[T], outputList: List[B] = List.Nil): List[B] =
+         inputList match {
+           case List.::(head, tail) => loop(tail, f(head) :: outputList)
+           case List.Nil => outputList
+         }
+       loop(this)
      }
-
-
-//     def flatMap[B](f: T => List[B]): List[B] = this match {
-//       case List.::(head, tail) => ???
-//       case List.Nil => List.Nil
-//       case _ => ???
-//     }
 
 
      /**
@@ -327,10 +322,20 @@ object hof{
       *
       */
      def mkString(sep: String): String = {
-       val listAsString = new StringBuilder()
-       this.map(listAsString + sep + _)
-       listAsString.toString
+       @tailrec
+       def loop(inputList: List[T], listAsString: String = ""): String =
+         inputList match {
+           case List.::(head, tail) => loop(tail, head.toString + sep + listAsString)
+           case List.Nil => listAsString
+         }
+       loop(this)
      }
+
+
+     //     val l1 = List(1, 2, 3)
+//     val l2 = List("one", "two", "three")
+//     l1.mkString("!") // 1!2!3
+//     l2.mkString(":") // one:two:three
 
 
      /**
@@ -357,8 +362,8 @@ object hof{
        def loop(inputList: List[T], outputList: List[T] = List.Nil): List[T] =
          inputList match {
            case List.::(head, tail) if f(head) => loop(tail, head :: outputList)
+           case List.::(head, tail) if !f(head) => loop(tail, outputList)
            case List.Nil => outputList
-           case _ => outputList
          }
        loop(this).reverse
      }
@@ -369,13 +374,17 @@ object hof{
       * Написать функцию incList котрая будет принимать список Int и возвращать список,
       * где каждый элемент будет увеличен на 1
       */
-     def incList(inc: Int): List[T] = {
-       def loop(inputList: List[T], outputList: List[T] = List.Nil) =
+     def incList(list: List[Int], inc: Int): List[Int] =
+       list.map(_ + 1)
+
+     def incList2(list: List[Int], inc: Int): List[Int] = {
+       @tailrec
+       def loop(inputList: List[Int], outputList: List[Int] = List.Nil): List[Int] =
          inputList match {
            case List.::(head, tail) => loop(tail, (head + inc) :: outputList)
            case List.Nil => outputList
          }
-       loop(this).reverse
+       loop(list).reverse
      }
 
 
@@ -384,23 +393,20 @@ object hof{
       * Написать функцию shoutString котрая будет принимать список String и возвращать список,
       * где к каждому элементу будет добавлен префикс в виде '!'
       */
-     def shoutString(prefix: String): List[T] = {
-       def loop(inputList: List[T], outputList: List[T] = List.Nil): List[T] =
+     def shoutString(list: List[String], prefix: String): List[String] =
+       list.map(prefix + _)
+
+     def shoutString2(list: List[String], prefix: String): List[String] = {
+       def loop(inputList: List[String], outputList: List[String] = List.Nil): List[String] =
          inputList match {
            case List.::(head, tail) => loop(tail, (prefix + head) :: outputList)
            case List.Nil => outputList
          }
+       loop(list)
      }
 
-
-     def shoutString2: List[String] = this match {
-       case List.::(head, tail) =>
-         val shoutHead = "!" + head
-         val shoutTail = tail.map("!" + _)
-         shoutHead :: shoutTail
-       case List.Nil => List.Nil
-     }
    }
+
 
 
    object List {
@@ -415,12 +421,7 @@ object hof{
       * def printArgs(args: Int*) = args.foreach(println(_))
       */
      def apply[A](v: A*): List[A] =
-       if(v.isEmpty) Nil else ::(v.head, apply(v.tail:_*))
+       if (v.isEmpty) Nil else ::(v.head, apply(v.tail:_*))
    }
-
-   val l1 = List(1, 2, 3)
-   val l2 = List("one", "two", "three")
-   l1.mkString("!") // 1!2!3
-   l2.mkString(":") // one:two:three
 
  }

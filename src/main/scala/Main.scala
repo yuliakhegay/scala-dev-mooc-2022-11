@@ -4,6 +4,7 @@ import module2.implicits.{implicit_conversions, implicit_scopes}
 import module3.functional_effects
 import functional_effects.functionalProgram.declarativeEncoding
 import functional_effects.functionalProgram.executableEncoding
+import module1.list.{List, _}
 
 import scala.util.Try
 
@@ -70,6 +71,11 @@ object Main{
 //    val r2: declarativeEncoding.Console[Unit] = declarativeEncoding.p2
 //    declarativeEncoding.interpret(r2)
 
+    val l1 = List(1, 2, 3)
+    val l2 = List("one", "two", "three")
+//    l1.mkString("!") // 1!2!3
+    val res1 = List.shoutString(l2, ":") // one:two:three
+    res1
 
 
   }
