@@ -317,16 +317,16 @@ object list {
      * Метод mkString возвращает строковое представление списка, с учетом переданного разделителя
      *
      */
-    def mkString(sep: String): String = {
-      @tailrec
-      def loop(inputList: List[T], listAsString: String = ""): String =
-        inputList match {
-          case List.::(head, tail) => loop(tail, head.toString + sep + listAsString)
-          case List.::(head, tail) if !tail =>
-          case List.Nil => listAsString
-        }
-      loop(this)
-    }
+//    def mkString(sep: String): String = {
+//      @tailrec
+//      def loop(inputList: List[T], listAsString: String = ""): String =
+//        inputList match {
+//          case List.::(head, tail) => loop(tail, head.toString + sep + listAsString)
+//          case List.::(head, tail) =>
+//          case List.Nil => listAsString
+//        }
+//      loop(this)
+//    }
 
 
     /**
@@ -412,7 +412,6 @@ object list {
           case List.::(head, tail) => loop(tail, (prefix + head) :: outputList)
           case List.Nil => outputList
         }
-
       loop(list)
     }
 
