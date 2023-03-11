@@ -4,27 +4,31 @@ import scala.util.Random
 
 class BallsExperiment {
 
-  val listOfBalls: List[Int] = List(0, 0, 0, 1, 1, 1)
-  def isWhite(): Boolean = {
+  val listOfBalls: List[Int] = Random.shuffle(List(0, 0, 0, 1, 1, 1))
+
+  def pickTwoBalls(): (Boolean, Boolean) = {
     val rand = new scala.util.Random
-    if (listOfBalls.apply(rand.nextInt(6)) == 1) true else false
+
+    val firstBall = rand.nextInt(listOfBalls.length)
+    val firstPickResult = listOfBalls(firstBall) == 1
+
+    val secondBall = rand.nextInt(listOfBalls.length - 1)
+    val secondPickResult = listOfBalls.patch(firstBall, Nil, 1)(secondBall) == 1
+
+    (firstPickResult, secondPickResult)
   }
-
-  def isFirstBlackSecondWhite(): (Boolean, Boolean) = {
-    val rand = new scala.util.Random
-    (listOfBalls.apply(rand.nextInt(6)), listOfBalls.apply(rand.nextInt(6)))
-
-    //    if (listOfBalls.apply(rand.nextInt(6)) == 1) true else false
-  }
-
 }
+
 
 object BallsTest {
   def main(args: Array[String]): Unit = {
-    val count = 10000
-    val listOfExperiments: List[BallsExperiment] = for (i <- List.range(1, count + 1)) yield new BallsExperiment  // список экспериментов и что было в рез-те получено -- 0 или 1
-    val resultsOfExperiments: List[Boolean] = listOfExperiments.map(_.isWhite())
-    val countOfPositiveExperiments: Float = resultsOfExperiments.count(_ == true)
-    println(countOfPositiveExperiments / count)
+    val count = 100000
+    val listOfExperiments: List[BallsExperiment] = List.range(0, count).map(_ => new BallsExperiment)
+    val resultsOfExperiments: List[(Boolean, Boolean)] = listOfExperiments.map(_.pickTwoBalls())
+
+    val firstBlackExperiments: List[(Boolean, Boolean)] = resultsOfExperiments.filter(_._1 == false)
+    val firstBlackSecondWhiteCount: Float = firstBlackExperiments.count(_._2 == true)
+
+    println(firstBlackSecondWhiteCount / firstBlackExperiments.length)
   }
 }
