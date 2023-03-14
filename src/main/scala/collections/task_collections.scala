@@ -1,5 +1,7 @@
 package collections
 
+import scala.util.matching.Regex._
+
 object task_collections {
 
   def isASCIIString(str: String): Boolean = str.matches("[A-Za-z]+")
@@ -16,7 +18,18 @@ object task_collections {
    *
    * **/
   def capitalizeIgnoringASCII(text: List[String]): List[String] = {
-    List.empty
+
+    def isASCIIString(str: String): Boolean = {
+      val asciiChars = (' ' to '~').toList
+      str.forall(asciiChars.contains(_))
+    }
+
+    val capitalize: PartialFunction[String, String] = {
+      case x if isASCIIString(x) => x.toUpperCase
+      case x if !isASCIIString(x) => x.toLowerCase
+    }
+
+    text.head :: text.tail.collect(capitalize)
   }
 
   /**
