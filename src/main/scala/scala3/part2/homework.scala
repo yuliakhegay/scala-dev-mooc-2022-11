@@ -1,57 +1,69 @@
 package part2.homework
-/*
-object homework1 {
-  extension (x: String)
-    def + ?????
+import scala.annotation.targetName
 
-    @main def part1Ex(): Unit ={
-      println("1" + "33")
-    }
-}
 
-object homework2 {
-  enum CompletionArg {
-    ???
-    //см приведенную ссылку
-  }
+object intExtensions:
 
-  object CompletionArg {
-    given fromString: Conversion[String, CompletionArg] = ???
+  extension (x: Int)
+    @targetName("concat")
+    def add (y: Int): String = x.toString.concat(y.toString)
 
-    given fromInt: Conversion[Int, CompletionArg] = ???
+  def main(args: Array[String]): Unit =
+    println(56 add 3)
 
-    given fromFloat: Conversion[Float, CompletionArg] = ???
-  }
+end intExtensions
+
+
+object Completions:
+
+  enum CompletionArg:
+    case ShowItAsString(a: String)
+    case ShowItAsInt(a: Int)
+    case ShowItAsFloat(a: Float)
+
+
+  object CompletionArg:
+
+    given fromString: Conversion[String, CompletionArg] = ShowItAsString(_)
+    given fromInt: Conversion[Int, CompletionArg] = ShowItAsInt(_)
+    given fromFloat: Conversion[Float, CompletionArg] = ShowItAsFloat(_)
+
+  end CompletionArg
   import CompletionArg.*
 
-  @main def part2Ex(): Unit ={
-    println(Completions.complete("String"))
-    println(Completions.complete(1))
-    println(Completions.complete(7f))
-  }
-}
+  def complete[T](arg: CompletionArg) = arg match
+    case ShowItAsString(_) => arg.toString
+    case ShowItAsInt(_) => arg.toString.toInt
+    case ShowItAsFloat(_) => arg.toString.toFloat
+
+end Completions
 
 
-object homework3 {
-  opaque type Logarithm = Double
+import java.time.LocalDate
 
-  object Logarithm{
-    //см приведенную ссылку
-  }
+object myOpaqueType:
 
-  extension (x: Logarithm)
-    def toDouble: ???
-    def + (y: Logarithm): ???
-    def * (y: Logarithm): ???
+  opaque type Year = Int
 
+  object Year:
+    def apply(n: Int): Year = n
 
-  @main def part3Ex(): Unit ={
-    import Logarithm
+    def safe(n: Int): Option[Year] =
+      if n <= LocalDate.now.getYear then Some(n) else None
 
-    val l = Logarithm(1.0)
-    val l2 = Logarithm(2.0)
-    val l3 = l * l2
-    val l4 = l + l2
+  end Year
 
-  }
-}*/
+  extension (n: Year)
+    def howLongAgo: Int = LocalDate.now.getYear - n
+    def beforeWorldWarTwo: Boolean = n < 1939
+
+  def main(args: Array[String]): Unit =
+    val myYear: Year = Year(2008)
+    val fakeYear: Int = 1380
+
+    println(myYear.howLongAgo)
+    println(myYear.beforeWorldWarTwo)
+    println(fakeYear.howLongAgo)
+    println(fakeYear.beforeWorldWarTwo)
+
+end myOpaqueType
